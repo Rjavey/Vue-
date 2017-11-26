@@ -5,17 +5,20 @@
         <el-col :span='7' class="pos-order" id="order-list">
           <el-tabs>
             <el-tab-pane label="点餐">
-              <el-table :data="tableData" border show-summary style="width: 100%">
+              <el-table :data="tableData" stripe style="width: 100%">
                 <el-table-column prop="goodsName" label="商品"></el-table-column>
                 <el-table-column prop="count" label="数量" width="50"></el-table-column>
                 <el-table-column prop="price" label="金额" width="70"></el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
                   <template scope="scope">
-                    <el-button type="text" size="small">删除</el-button>
-                    <el-button type="text" size="small">增加</el-button>
+                    <el-button type="text" size="small" >删除</el-button>
+                    <el-button type="text" size="small" @click="addOrderList(scope.row)">增加</el-button>
                   </template>
                 </el-table-column>
               </el-table>
+              <div class="totalDiv">
+                <small>数量:{{ totalCount }}件</small>&nbsp;&nbsp;&nbsp;&nbsp;<small>金额:{{ totalMoney }}元</small>
+              </div>
               <div class="div-btn">
                 <el-button type="warning">挂单</el-button>
                 <el-button type="danger">删除</el-button>
@@ -47,7 +50,7 @@
             <el-tabs>
               <el-tab-pane label="汉堡">
                 <ul class="cookList">
-                  <li v-for="goods in type0Goods">
+                  <li v-for="goods in type0Goods" @click="addOrderList(goods)">
                     <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
                     <span class="foodName">{{ goods.goodsName }}</span>
                     <span class="foodPrice">￥{{ goods.price }}元</span>
@@ -56,7 +59,7 @@
               </el-tab-pane>
               <el-tab-pane label="小食">
                 <ul class="cookList">
-                  <li v-for="goods in type1Goods">
+                  <li v-for="goods in type1Goods" @click="addOrderList(goods)">
                     <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
                     <span class="foodName">{{ goods.goodsName }}</span>
                     <span class="foodPrice">￥{{ goods.price }}元</span>
@@ -65,7 +68,7 @@
               </el-tab-pane>
               <el-tab-pane label="饮料">
                 <ul class="cookList">
-                  <li v-for="goods in type2Goods">
+                  <li v-for="goods in type2Goods" @click="addOrderList(goods)">
                     <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
                     <span class="foodName">{{ goods.goodsName }}</span>
                     <span class="foodPrice">￥{{ goods.price }}元</span>
@@ -74,7 +77,7 @@
               </el-tab-pane>
               <el-tab-pane label="套餐">
                 <ul class="cookList">
-                  <li v-for="goods in type3Goods">
+                  <li v-for="goods in type3Goods" @click="addOrderList(goods)">
                     <span class="foodImg"><img :src="goods.goodsImg" width="100%"></span>
                     <span class="foodName">{{ goods.goodsName }}</span>
                     <span class="foodPrice">￥{{ goods.price }}元</span>
@@ -96,28 +99,14 @@ export default {
   name: 'Pos',
   data () {
     return {
-      tableData: [{
-        goodsName: '可口可乐',
-        price: 8,
-        count: 1
-      }, {
-        goodsName: '香辣鸡腿堡',
-        price: 15,
-        count: 1
-      }, {
-        goodsName: '爱心薯条',
-        price: 8,
-        count: 1
-      }, {
-        goodsName: '甜筒',
-        price: 8,
-        count: 1
-      }],
+      tableData: [], // 初始化购物车
       oftenGoods: [],
       type0Goods: [],
       type1Goods: [],
       type2Goods: [],
-      type3Goods: []
+      type3Goods: [],
+      totalMoney: 0,
+      totalCount: 0
     }
   },
   created: function () {
@@ -150,7 +139,7 @@ export default {
     document.getElementById('order-list').style.height = orderHeight + 'px'
   },
   methods: {
-    // 添加订到至列表
+    // 添加订单至列表
     addOrderList (goods) {
       // 汇总数量清零
       this.totalCount = 0
@@ -158,21 +147,31 @@ export default {
       let isHave = false
       // 判断是否这个商品已经存在于订单列表
       for (let i = 0; i < this.tableData.length; i++) {
-        console.log(this.tableData[i].goodsId);
-        if (this.tableData[i].goodsId == goods.goodsId) {
+        // console.log(this.tableData[i].goodsId)
+        if (this.tableData[i].goodsId === goods.goodsId) {
           isHave = true // 存在
         }
       }
       // 根据isHave的值判断订单列表中是否已有此商品
       if (isHave) {
         // 商品已存在则添加数量
-        let arr = this.tableData.filter(o => o.goodsId == goods.goodsId);
-        arr[0].count++;
-        console.log(arr);
-      }else{
+        let arr = this.tableData.filter(o => o.goodsId === goods.goodsId)
+        arr[0].count++
+        // console.log(arr)
+      } else {
         // 商品不存在则加入数组
-        let newGoods = {goodsId}
+        let newGoods = {
+          goodsId: goods.goodsId,
+          goodsName: goods.goodsName,
+          price: goods.price,
+          count: 1 }
+        this.tableData.push(newGoods)
       }
+      // 计算数量及总价
+      this.tableData.forEach(element => {
+        this.totalCount += element.count
+        this.totalMoney = this.totalMoney + (element.price * element.count)
+      })
     }
   }
 }
