@@ -11,7 +11,7 @@
                 <el-table-column prop="price" label="金额" width="70"></el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
                   <template scope="scope">
-                    <el-button type="text" size="small" >删除</el-button>
+                    <el-button type="text" size="small" @click="delSingleGoods(scope.row)">删除</el-button>
                     <el-button type="text" size="small" @click="addOrderList(scope.row)">增加</el-button>
                   </template>
                 </el-table-column>
@@ -21,8 +21,8 @@
               </div>
               <div class="div-btn">
                 <el-button type="warning">挂单</el-button>
-                <el-button type="danger">删除</el-button>
-                <el-button type="success">结账</el-button>
+                <el-button type="danger" @click="delAllGoods">删除</el-button>
+                <el-button type="success" @click="checkOut">结账</el-button>
               </div>
             </el-tab-pane>
             <el-tab-pane label="挂单">
@@ -167,11 +167,43 @@ export default {
           count: 1 }
         this.tableData.push(newGoods)
       }
-      // 计算数量及总价
-      this.tableData.forEach(element => {
-        this.totalCount += element.count
-        this.totalMoney = this.totalMoney + (element.price * element.count)
-      })
+      this.getAllMoney()
+    },
+    // 删除购物车中单行物品
+    delSingleGoods (goods) {
+      this.tableData = this.tableData.filter(o => o.goodsId !== goods.goodsId)
+      this.getAllMoney()
+    },
+    delAllGoods () {
+      this.tableData = []
+      this.totalCount = 0
+      this.totalMoney = 0
+    },
+    // 模拟结账
+    checkOut () {
+      if (this.totalCount !== 0) {
+        this.tableData = []
+        this.totalCount = 0
+        this.totalMoney = 0
+        this.$message ({
+          message: '支付成功',
+          type: 'success'
+        })
+      } else {
+        this.$message.error('您的购物车为空，请添加商品后重新支付')
+      }
+    },
+    // 汇总数量金额
+    getAllMoney () {
+      this.totalCount = 0
+      this.totalMoney = 0
+      if (this.tableData) {
+        // 计算数量及总价
+        this.tableData.forEach(element => {
+          this.totalCount += element.count
+          this.totalMoney = this.totalMoney + (element.price * element.count)
+        })
+      }
     }
   }
 }
