@@ -7,11 +7,11 @@
       </li>
       <li>
         <i class="icon iconfont icon-dianpu"></i>
-        <div>店铺</div>
+        <router-link to="Home"><div>店铺</div></router-link>
       </li>
       <li>
         <i class="icon iconfont icon-hanbao"></i>
-        <div>商品</div>
+        <router-link to="Pos"><div>商品</div></router-link>
       </li>
       <li>
         <i class="icon iconfont icon-huiyuanqia"></i>
@@ -40,7 +40,7 @@ export default {
   height: 100%;
   background-color: #1d8ce0;
   float: left;
-  width: 5%;
+  width: 70px;
 }
 .iconfont {
   font-size: 24px;
@@ -54,5 +54,11 @@ export default {
   text-align: center;
   border-bottom: 1px solid #20a0ff;
   padding: 10px;
+}
+a {
+  text-decoraction: none;
+}
+.router-link-active {
+  color: orange;
 }
 </style>

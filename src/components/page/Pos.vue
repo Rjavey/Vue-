@@ -10,7 +10,7 @@
                 <el-table-column prop="count" label="数量" width="50"></el-table-column>
                 <el-table-column prop="price" label="金额" width="70"></el-table-column>
                 <el-table-column label="操作" width="100" fixed="right">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     <el-button type="text" size="small" @click="delSingleGoods(scope.row)">删除</el-button>
                     <el-button type="text" size="small" @click="addOrderList(scope.row)">增加</el-button>
                   </template>
@@ -185,7 +185,7 @@ export default {
         this.tableData = []
         this.totalCount = 0
         this.totalMoney = 0
-        this.$message ({
+        this.$message({
           message: '支付成功',
           type: 'success'
         })
