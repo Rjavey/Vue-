@@ -34,6 +34,16 @@ export default {
 }
 </script>
 <style>
+a,a:link {
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+  color: white;
+  text-decoration: none;
+}
 .left-nav {
   color: #fff;
   font-size: 10px;
@@ -58,7 +68,7 @@ export default {
 a {
   text-decoraction: none;
 }
-.router-link-active {
+.router-link-active,.router-link-hover {
   color: orange;
 }
 </style>

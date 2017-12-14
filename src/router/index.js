@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/page/Home'
+import Home from '@/components/page/Home/Home'
 import Pos from '@/components/page/Pos'
 
 Vue.use(Router)
@@ -13,7 +13,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/Home',
+      path: '/Home/Home',
       name: 'Home',
       component: Home
     },
