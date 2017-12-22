@@ -1,14 +1,17 @@
 <template>
-  <div>
-    <h1 class="title" v-if="seen" @click="welcomeShow">欢迎来到逆袭的橘小店</h1>
+  <div @click="welcomeShow">
+    <h1 class="title" v-if="seen">欢迎来到逆袭的橘小店</h1>
+    <transition name="fade">
+    <p v-if="show">hello</p>
+  </transition>
     <div v-if="login">
       <h1 class="login">请先登陆</h1></br></br></br>
       <div class="login-box">
         <i class="icon iconfont icon-shenfenzheng"></i><input type="text" class="login-input" id="userName" v-model="userName" required placeholder="请输入用户名"></br>
         <i class="icon iconfont icon-xiaoxi"></i><input type="password" class="login-input" id="passWord" v-model="passWord" required placeholder="请输入密码" font-size>
         <div class="input-submit">
-          <input type="submit" value="注册">
-          <input type="submit" value="登录" @click="loginPost">
+          <input class="sign-up" type="submit" value="注册">
+          <input class="sign-in" type="submit" value="登录" @click="loginPost">
         </div>
       </div>
     </div>
@@ -17,7 +20,6 @@
 
 <script>
 import axios from 'axios'
-// import md5 from 'js-md5'
 
 export default {
   name: 'Home',
@@ -25,6 +27,8 @@ export default {
     return {
       seen: true,
       login: false,
+      show: false,
+      transitionName: 'expand',
       userName: '',
       passWord: ''
     }
@@ -50,6 +54,10 @@ export default {
         console.log(this.error)
       })
     }
+  },
+  mounted () {
+    console.log('444')
+    setInterval(console.log('222'), 200)
   }
 }
 </script>
@@ -65,8 +73,7 @@ export default {
 .login {
   text-align: center;
   font-size: 50px;
-  /* position: relative;
-  top: 50px; */
+  padding-top: 200px;
 }
 input {
   background:none;  
@@ -91,8 +98,31 @@ input {
   border-left-width: 0px;
 
 }
-.input-submit input{
-  padding: 0 50px 0 50px;
+.input-submit input {
+  position: relative;
+  width: 100px;
+  padding: 0px;
+  height: 35px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+.sign-up {
+  margin: 20px;
+  height: 35px;
+  width: 80px;
+  text-align: left;
+  background-color: red;
+  border-radius: 0.5em;
+  cursor:pointer
+}
+.sign-in {
+  margin-top: 20px;
+  height: 35px;
+  width: 80px;
+  background-color: #00BFFF;
+  border-radius: 0.5em;
+  cursor:pointer
 }
 .pos {
   font-size: 12px;
@@ -107,4 +137,10 @@ font-size:16px;
 margin: 0 auto;
 text-align: center;
 } 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+  opacity: 0
+}
 </style>
